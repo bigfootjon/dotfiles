@@ -1,3 +1,7 @@
+- defaults:
+    link:
+      relink: true
+
 - clean: ['~']
 
 - link:
@@ -12,5 +16,9 @@
     ~/.config/redshift:
         path: config/redshift/
         create: true
-
-
+    ~/.screenlayout:
+        path: screenlayout/
+        create: true
+    ~/.config/ulauncher:
+        path: ulauncher/
+        create: true
