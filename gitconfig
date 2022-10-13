@@ -1,0 +1,14 @@
+[user]
+	name = Jon Janzen
+	email = jon@jonjanzen.com
+	signingkey = 0xA2CF4B34B6993EF7
+[core]
+	autocrlf = input
+[pager]
+	branch = false
+[color]
+	ui = auto
+[pull]
+	rebase = true
+[commit]
+	gpgsign = true
