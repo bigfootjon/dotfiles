@@ -12,6 +12,7 @@
     ~/.vimrc: vimrc
     ~/.config/sway/config: config/sway/config
     ~/.config/gammastep/config.ini: config/gammastep/config.ini
+    ~/.config/foot/foot.ini: config/foot/foot.ini
     ~/.config/ulauncher:
         path: ulauncher/
         create: true

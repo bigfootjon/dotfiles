@@ -114,7 +114,7 @@ output DP-1 pos 0 0
 output DP-3 pos 2560 0
 exec swayidle -w \
 	timeout 300 'swaymsg "output * power off"' \
-	timeout 900 'swaymsg "output * power on" && s2idle' \
+	timeout 900 'swaymsg "output * power on" && systemctl suspend' \
 	resume 'swaymsg "output * power on"'
 
 for_window [window_role = "pop-up"] floating enable
