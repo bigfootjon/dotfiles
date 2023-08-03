@@ -1,0 +1,146 @@
+# sway config file
+# ported from i3
+
+set $mod Mod4
+
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +1%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -1%
+bindsym XF86AudioMute        exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86Sleep exec sudo systemctl suspend
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+bindsym $mod+Shift+3 exec grim $(date +"%Y%m%d%H%M%S").png
+bindsym $mod+Shift+4 exec grim -g "$(slurp)" $(date +"%Y%m%d%H%M%S").png
+
+floating_modifier $mod normal
+
+# start a terminal
+bindsym $mod+Return exec footclient
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# Change window focus
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move window
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h splith
+
+# split in vertical orientation
+bindsym $mod+v splitv
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen
+
+# change container layout (stacked, tabbed, toggle split)
+#bindsym $mod+s layout stacking # #mod+s reused below
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+bindsym $mod+z focus child
+
+# switch to workspace
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+# reload the configuration file
+bindsym $mod+Shift+r reload
+# exit sway (logs you out of your Wayland session)
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+mode "resize" {
+	bindsym Left resize shrink width 50px
+	bindsym Down resize grow height 50px
+	bindsym Up resize shrink height 50px
+	bindsym Right resize grow width 50px
+
+	bindsym Shift+Left resize shrink width 10px
+	bindsym Shift+Down resize grow height 10px
+	bindsym Shift+Up resize shrink height 10px
+	bindsym Shift+Right resize grow width 10px
+
+	bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+focus_follows_mouse no
+mouse_warping none
+
+
+bindsym $mod+s exec swaymsg workspace 1 && swaymsg move workspace to output DP-3 && swaymsg workspace 2 && swaymsg move workspace to output DP-1 && swaymsg rename workspace 1 to tmp && swaymsg rename workspace 2 to 1 && swaymsg rename workspace tmp to 2
+bindsym $mod+g exec google-chrome-stable --enable-features=WebUIDarkMode --force-dark-mode --enable-webgl --ignore-gpu-blocklist --use-vulkan --enable-gpu-rasterization --use-gl=desktop --enable-raw-draw
+bindsym $mod+p exec spotify --enable-features=UseOzonePlatform --ozone-platform=wayland
+
+input "type:keyboard" {
+	xkb_options caps:none
+	xkb_numlock enabled
+}
+
+bindsym $mod+Space exec ulauncher
+exec /usr/bin/foot --server
+exec /usr/bin/gammastep
+output * background #000000 solid_color
+output DP-1 pos 0 0
+output DP-3 pos 2560 0
+exec swayidle -w \
+	timeout 300 'swaymsg "output * power off"' \
+	timeout 900 'swaymsg "output * power on" && s2idle' \
+	resume 'swaymsg "output * power on"'
+
+for_window [window_role = "pop-up"] floating enable
+for_window [window_role = "bubble"] floating enable
+for_window [window_role = "dialog"] floating enable
+for_window [window_type = "dialog"] floating enable
+for_window [window_role = "task_dialog"] floating enable
+for_window [window_type = "menu"] floating enable
+for_window [app_id = "floating"] floating enable
+for_window [app_id = "floating_update"] floating enable, resize set width 1000px height 600px
+for_window [class = "(?i)pinentry"] floating enable
+
+bar {
+	position bottom
+
+	status_command while echo \
+	  V: $(amixer -c 1 -M -D pulse get Master | grep -o -E [[:digit:]]+% | head -1) \| \
+	  /: $(df -h / | grep /dev/root | grep -o -E [[:digit:]]+[TGM] | tail -1) \| \
+	  E: $(ip addr show enp9s0 | grep "inet " | grep -o -E "[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]" | head -1) \| \
+	  Load: $(cat /proc/loadavg | grep -o -E [[:digit:]]*\.?[[:digit:]]* | head -1) \| \
+	  $(date +'%Y-%m-%d %H:%M:%S'); do sleep 1; done
+
+	colors {
+		statusline #ffffff
+		background #323232
+		inactive_workspace #32323200 #32323200 #5c5c5c
+	}
+}
+

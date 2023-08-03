@@ -10,15 +10,8 @@
         path: ssh/config
         create: true
     ~/.vimrc: vimrc
-    ~/.config/i3:
-        path: config/i3/
-        create: true
-    ~/.config/redshift:
-        path: config/redshift/
-        create: true
-    ~/.screenlayout:
-        path: screenlayout/
-        create: true
+    ~/.config/sway/config: config/sway/config
+    ~/.config/gammastep/config.ini: config/gammastep/config.ini
     ~/.config/ulauncher:
         path: ulauncher/
         create: true
