@@ -110,6 +110,7 @@ bindsym $mod+Space exec ulauncher
 exec /usr/bin/foot --server
 exec /usr/bin/gammastep
 exec /usr/bin/blueman-applet
+exec /usr/bin/dbus-update-activation-environment --all
 output * background #000000 solid_color
 output DP-1 pos 0 0
 output DP-3 pos 2560 0
