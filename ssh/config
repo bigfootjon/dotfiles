@@ -1,4 +1,7 @@
 Host *
-ServerAliveInterval 60
-SetEnv TERM=xterm-256color
-AddKeysToAgent yes
+  ServerAliveInterval 60
+  SetEnv TERM=xterm-256color
+  AddKeysToAgent yes
+  ControlMaster auto
+  ControlPath /run/user/%i/ssh_mux_%h_%p_%r
+  ControlPersist 600
