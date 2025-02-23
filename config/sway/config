@@ -7,7 +7,7 @@ set $mod Mod4
 bindsym XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+
 bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-
 bindsym XF86AudioMute        exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-bindsym XF86Sleep exec sudo systemctl suspend
+bindsym XF86Sleep exec swaylock && sudo systemctl suspend
 
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play-pause
@@ -20,7 +20,7 @@ bindsym $mod+Shift+4 exec grim -g "$(slurp)" $(date +"%Y%m%d%H%M%S").png
 floating_modifier $mod normal
 
 # start a terminal
-bindsym $mod+Return exec footclient
+bindsym $mod+Return exec wezterm
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -100,6 +100,8 @@ mouse_warping none
 bindsym $mod+s exec swaymsg workspace 1 && swaymsg move workspace to output DP-3 && swaymsg workspace 2 && swaymsg move workspace to output DP-1 && swaymsg rename workspace 1 to tmp && swaymsg rename workspace 2 to 1 && swaymsg rename workspace tmp to 2
 bindsym $mod+g exec google-chrome-stable --enable-features=WebUIDarkMode --force-dark-mode --enable-webgl --ignore-gpu-blocklist --use-vulkan --enable-gpu-rasterization --use-gl=desktop --enable-raw-draw
 bindsym $mod+p exec spotify --enable-features=UseOzonePlatform --ozone-platform=wayland
+bindsym $mod+l exec swaylock
+bindsym $mod+shift+s exec swaylock && systemctl suspend
 
 input "type:keyboard" {
 	xkb_options caps:none
@@ -107,7 +109,7 @@ input "type:keyboard" {
 }
 
 bindsym $mod+Space exec wofi --show drun
-exec /usr/bin/foot --server
+seat seat0 xcursor_theme Adwaita 14
 exec /usr/bin/gammastep
 exec /usr/bin/blueman-applet
 exec /usr/bin/dbus-update-activation-environment --all
@@ -115,6 +117,7 @@ output * background #000000 solid_color
 output DP-1 pos 0 0
 output DP-3 pos 2560 0
 exec swayidle -w \
+	before-sleep 'swaylock' \
 	timeout 300 'swaymsg "output * power off"' \
 	resume 'swaymsg "output * power on"' \
 	timeout 900 'sudo systemctl suspend' \
@@ -134,7 +137,7 @@ bar {
 	position bottom
 
 	status_command while echo \
-	  V: $(amixer -c 1 -M -D pulse get Master | grep -o -E [[:digit:]]+% | head -1) \| \
+	  $(wpctl get-volume @DEFAULT_AUDIO_SINK@) \| \
 	  /: $(df -h / | grep /dev/root | grep -o -E [[:digit:]]+[TGM] | tail -1) \| \
 	  E: $(ip addr show enp9s0 | grep "inet " | grep -o -E "[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]" | head -1) \| \
 	  Load: $(cat /proc/loadavg | grep -o -E [[:digit:]]*\.?[[:digit:]]* | head -1) \| \
